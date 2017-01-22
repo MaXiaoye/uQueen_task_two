@@ -21,12 +21,13 @@ public class main {
 
 		String filename = "C:\\Users\\xom\\Desktop\\report.csv";
 		String url = "https://issues.apache.org/jira/browse/CAMEL-10597";
-		String title = "Type,Priority,Assignee,Reporter,Created,Created Epoch,Description,Comments";
+		String title = "Type,Priority,Affects Version/s,Component/s,Labels,Patch Info,Estimated Complexity,Status,Resolution,Fix Version/s,Assignee,Reporter,Votes,Watchers,Created Date,Created Epoch,Updated Date,Updated Epoch,Resolved Date,Resolved Epoch,Description,Comments";
 
 		File file = new File(filename);
 		if (!file.exists()) {						// if file does not exist, then create it
 			try {
 				file.createNewFile();
+				writeCsv(title, filename);
 			} catch (IOException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
@@ -35,7 +36,6 @@ public class main {
 		
 		//If the file is opening
 		if (file.renameTo(file)) {
-			writeCsv(title, filename);
 			String summary = getParse(url);
 			writeCsv(summary, filename);
 		} else {
@@ -53,13 +53,29 @@ public class main {
 			Element content = doc.getElementById("content");
 			String type = textFormatter(content.getElementById("type-val"));
 			String priority = textFormatter(content.getElementById("priority-val"));
-			//System.out.println(priority);
-			String affectsVersion = textFormatter(content.getElementById("version-val"));
-			System.out.println(affectsVersion);
+			String affectsVersion = textFormatter(content.getElementById("versions-field"));
+			String components = textFormatter(content.getElementById("components-field"));
+			String labels = textFormatter(content.getElementById("labels-13028113-value"));
+			String patchAvailable = textFormatter(content.getElementById("customfield_12310041-field"));
+			String estimatedComplexity = textFormatter(content.getElementById("customfield_12310060-val"));
+			String status = textFormatter(content.getElementById("status-val"));
+			String resolution = textFormatter(content.getElementById("resolution-val"));
+			String fixVersions = textFormatter(content.getElementById("fixVersions-field"));
+			String votesData = textFormatter(content.getElementById("vote-data"));
+			String votesLabel = textFormatter(content.getElementById("vote-label"));
+			String votes = votesData + " " + votesLabel;
+			String watcherData = textFormatter(content.getElementById("watcher-data"));
+			String watcherLabel = textFormatter(content.getElementById("watch-label"));
+			String watchers = watcherData + " " + watcherLabel;
 			String assignee = textFormatter(content.getElementById("assignee-val"));
 			String reporter = textFormatter(content.getElementById("reporter-val"));
-			String create = textFormatter(content.getElementById("create-date"));
-			long createTime = getTime(create);
+			String createdDate = textFormatter(content.getElementById("create-date"));
+			long createdEpoch = getTime(createdDate);
+			String updatedDate = textFormatter(content.getElementById("updated-date"));
+			long updatedEpoch = getTime(updatedDate);
+			String resolvedDate = textFormatter(content.getElementById("resolved-date"));
+			long resolvedEpoch = getTime(resolvedDate);
+			System.out.println(resolvedEpoch);
 			String description = textFormatter(content.getElementById("description-val"));
 			
 			//Analyse comments and format text.
@@ -75,8 +91,7 @@ public class main {
 			detailedComments = detailedComments.replace(",", " ");
 			
 			//Add all text into one line.
-			summary = type + "," + priority + "," + assignee + "," + reporter + "," + create + "," + createTime + "," + description + ","
-					+ detailedComments;
+			summary = type + "," + priority + "," + affectsVersion + "," + components + "," + labels + "," + patchAvailable + "," + estimatedComplexity + "," + status + "," + resolution + "," + fixVersions + "," + assignee + "," + reporter + "," + votes + "," + watchers + "," + createdDate + "," + createdEpoch + "," + updatedDate + "," + updatedEpoch + "," + resolvedDate + "," + resolvedEpoch + "," + description + "," + detailedComments;
 
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
