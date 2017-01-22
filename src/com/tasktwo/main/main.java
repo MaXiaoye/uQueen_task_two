@@ -34,7 +34,7 @@ public class main {
 			}	
 		}
 		
-		//If the file is opening
+		//Check if the file is opening
 		if (file.renameTo(file)) {
 			String summary = getParse(url);
 			writeCsv(summary, filename);
@@ -51,6 +51,8 @@ public class main {
 		try {
 			doc = Jsoup.connect(url).get();
 			Element content = doc.getElementById("content");
+			
+			//Extract all properties required.
 			String type = textFormatter(content.getElementById("type-val"));
 			String priority = textFormatter(content.getElementById("priority-val"));
 			String affectsVersion = textFormatter(content.getElementById("versions-field"));
@@ -75,7 +77,6 @@ public class main {
 			long updatedEpoch = getTime(updatedDate);
 			String resolvedDate = textFormatter(content.getElementById("resolved-date"));
 			long resolvedEpoch = getTime(resolvedDate);
-			System.out.println(resolvedEpoch);
 			String description = textFormatter(content.getElementById("description-val"));
 			
 			//Analyse comments and format text.
